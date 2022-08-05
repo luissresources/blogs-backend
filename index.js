@@ -62,7 +62,7 @@ app.get('/api/blogs/:id', (request, response) => {
     .catch(error => console.log(error))
 })
 
-const PORT = 3003 || process.env.PORT
+const PORT = process.env.PORT || 3003
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
