@@ -3,17 +3,16 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
-const Blog = require('./models/blog')
 const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 
 mongoose.connect(config.mongoUrl)
-  .then(result => {
+  .then(() => {
     logger.info('connected to Mongo Atlas')
   })
-  .catch(error => logger.error('Error connection'))
+  .catch(() => logger.error('Error connection'))
 
 app.use(cors())
 app.use(express.json())
