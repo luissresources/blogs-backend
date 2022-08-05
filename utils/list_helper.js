@@ -31,8 +31,39 @@ const favoriteBlog = blogs => {
   return 'none'
 }
 
+const mostBlogs = blogs => {
+  const resultsObject = {}
+  let mostValue = 0
+  let mostAuthor = 0
+  let resultsMostAuthor = {}
+  if (blogs.length !== 0){
+    blogs.map(blog => {
+      const author = blog.author
+      if (!resultsObject.hasOwnProperty(author)){
+        resultsObject[author] = 1
+      } else {
+        resultsObject[author] += 1
+      }
+    })
+
+    // iterando objecto de resultados
+    Object.entries(resultsObject).forEach(([key, value]) => {
+      if (value > mostValue){
+        mostValue = value
+        mostAuthor = key
+      }
+    })
+    return resultsMostAuthor = {
+      author: mostAuthor,
+      blogs: mostValue
+    }
+  }
+  return 'empty'
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }

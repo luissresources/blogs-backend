@@ -65,7 +65,7 @@ const blogs = [
   {
     _id: '62ec5b2a841a969389e7bbd6',
     title: 'HTML Font Size - How to Change Text Size with an HTML Tag',
-    author: 'Joel Olawanle',
+    author: 'Oyedele Temitope',
     url: 'https://www.freecodecamp.org/news/how-to-change-text-size-in-html/',
     likes: 0,
     __v: 0
@@ -109,3 +109,25 @@ describe('Favorite Blog', () => {
     })
   })
 })
+
+describe('Most Blogs', () => {
+  test('Blog list empty', () => {
+    const result = listHelper.mostBlogs(emptyList)
+    expect(result).toBe('empty')
+  })
+  test('Blog one item list', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Oyedele Temitope',
+      blogs: 1
+    })
+  })
+  test('Blog list', () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual({
+      author: 'Oyedele Temitope',
+      blogs: 2
+    }
+    )
+  })
+} )
