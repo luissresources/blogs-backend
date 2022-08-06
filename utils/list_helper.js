@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 // eslint-disable-next-line no-unused-vars
 const dummy = (blogs) => {
   return 1
@@ -31,6 +33,17 @@ const favoriteBlog = blogs => {
   return 'none'
 }
 
+const mostLikes = blogs => {
+  if (blogs.length !== 0) {
+    const orderBlogsByLikes = _.orderBy(blogs, ['likes'], ['desc'])
+    return {
+      author: orderBlogsByLikes[0].author,
+      likes: orderBlogsByLikes[0].likes
+    }
+  }
+  return 'empty'
+}
+
 const mostBlogs = blogs => {
   const resultsObject = {}
   let mostValue = 0
@@ -61,9 +74,11 @@ const mostBlogs = blogs => {
   return 'empty'
 }
 
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }

@@ -131,3 +131,25 @@ describe('Most Blogs', () => {
     )
   })
 } )
+
+describe('Most Likes', () => {
+  test('Blog list empty', () => {
+    const result = listHelper.mostLikes(emptyList)
+    expect(result).toBe('empty')
+  })
+  test('Blog one item list', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Oyedele Temitope',
+      likes: 5
+    })
+  })
+  test('Blog list', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual({
+      author: 'Danny Adams',
+      likes: 12
+    }
+    )
+  })
+} )
