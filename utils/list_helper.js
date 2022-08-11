@@ -52,6 +52,7 @@ const mostBlogs = blogs => {
   if (blogs.length !== 0){
     blogs.map(blog => {
       const author = blog.author
+      // eslint-disable-next-line no-prototype-builtins
       if (!resultsObject.hasOwnProperty(author)){
         resultsObject[author] = 1
       } else {
@@ -66,6 +67,7 @@ const mostBlogs = blogs => {
         mostAuthor = key
       }
     })
+    // eslint-disable-next-line no-unused-vars
     return resultsMostAuthor = {
       author: mostAuthor,
       blogs: mostValue
