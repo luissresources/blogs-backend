@@ -4,7 +4,6 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
-// const logger = require('../utils/logger')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -33,8 +32,6 @@ describe('all blogs - get', () => {
   test('check property id', async () => {
     const response = await api.get('/api/blogs')
     const getBlog = response.body[0]
-
-    console.log({ response, getBlog })
 
     expect(getBlog.id).toBeDefined()
   })
@@ -74,7 +71,6 @@ describe('all blogs - get', () => {
       .expect(201)
 
     const content = await helper.blogsInDb()
-    console.log({ content })
     const lastBlog = content[content.length - 1]
     expect(lastBlog.likes).toBe(0)
   })
@@ -91,6 +87,21 @@ describe('all blogs - get', () => {
 
     const content = await helper.blogsInDb()
     expect(content).toHaveLength(helper.allBlogs.length)
+  })
+})
+
+describe('update blog', () => {
+  test('update only blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    const updatedBlog = { ...blogToUpdate, likes : 23 }
+
+    await api
+      .put(`/api/blogs/${ blogToUpdate.id }`)
+      .send(updatedBlog)
+
+    const content = await Blog.findById(blogToUpdate.id)
+    expect(content.likes).toBe(23)
   })
 })
 
