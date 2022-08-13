@@ -16,6 +16,39 @@ beforeEach(async () => {
   }
 })
 
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'salainen',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
+  })
+})
+
 describe('all blogs - get', () => {
   test('blogs are returned as json', async () => {
     const response = await api
@@ -39,11 +72,18 @@ describe('all blogs - get', () => {
   })
 
   test('new blog add', async () => {
+    const userAll = await helper.usersInDb()
+    // console.log({ userAll })
+    const user = userAll[0]
+    // console.log('user test:',user.id)
+
+
     const newBlog = {
       title: 'CSS is awesome',
       author: 'Luis Sanchez',
       url: 'luissresources.com',
-      likes: 10
+      likes: 10,
+      user: user.id
     }
 
     await api
@@ -61,10 +101,17 @@ describe('all blogs - get', () => {
   })
 
   test('send without likes property', async () => {
+    const userAll = await helper.usersInDb()
+    // console.log({ userAll })
+    const user = userAll[0]
+    // console.log('user test:',user.id)
+
+
     const newBlog = {
       title: 'REACT is awesome',
       author: 'Luis Sanchez',
-      url: 'luissresources.com'
+      url: 'luissresources.com',
+      user: user.id
     }
 
     await api
@@ -130,39 +177,6 @@ describe('delete blog', () => {
     await api
       .delete(`/api/blogs/${id}`)
       .expect(404)
-  })
-})
-
-describe('when there is initially one user in db', () => {
-  beforeEach(async () => {
-    await User.deleteMany({})
-
-    const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
-
-    await user.save()
-  })
-
-  test('creation succeeds with a fresh username', async () => {
-    const usersAtStart = await helper.usersInDb()
-
-    const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
-    }
-
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-
-    const usersAtEnd = await helper.usersInDb()
-    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
-
-    const usernames = usersAtEnd.map(u => u.username)
-    expect(usernames).toContain(newUser.username)
   })
 })
 

@@ -8,14 +8,15 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "NodeJS is awesome",
+  "title": "JS is awesome",
   "author": "Luis Sanchez",
   "url": "luissresources.com",
-  "likes": 10
+  "likes": 10,
+  "user": "62f7fb9e4e8fc0616ba131cf"
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/62f5c3e001a46ca2445b6bf4
+DELETE http://localhost:3003/api/blogs/62f7f6e410a887858872a490
 
 ###
 GET http://localhost:3003/api/users
@@ -28,10 +29,10 @@ POST http://localhost:3003/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "lucho",
+  "username": "luissdev",
   "name": "Luis Sanchez",
   "password": "vamospalante"
 }
 
 ###
-DELETE http://localhost:3003/api/users/62f6d184b50b93c31c707e3c
+DELETE http://localhost:3003/api/users/62f7e93a628a9304cc51a1eb
