@@ -10,13 +10,37 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
   const body = request.body
 
+  if(!(body.username && body.password)) {
+    return response.status(400).send({
+      error: 'Added username and password'
+    })
+  }
+
+  if(body.username.length < 3 && body.password.length < 3) {
+    return response.status(400).send({
+      error: 'username and password must be greater than three characters'
+    })
+  }
+
+  if(body.username.length < 3) {
+    return response.status(400).send({
+      error: 'username must be greater than three characters'
+    })
+  }
+
+  if(body.password.length < 3) {
+    return response.status(400).send({
+      error: 'password must be greater than three characters'
+    })
+  }
+
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
   const user = new User({
     username: body.username,
-    name: body.name,
-    passwordHash,
+    name: body.name || 'user',
+    password: passwordHash,
   })
 
   const savedUser = await user.save()

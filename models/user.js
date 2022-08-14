@@ -4,6 +4,7 @@ const uniqueValidator = require('mongoose-unique-validator')
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
+    minlength: 3,
     unique: true
   },
   name: String,
@@ -24,7 +25,8 @@ userSchema.set('toJSON', {
     delete returnedObject._id
     delete returnedObject.__v
     // the passwordHash should not be revealed
-    delete returnedObject.passwordHash
+    // delete returnedObject.passwordHash
+    delete returnedObject.password
   }
 })
 

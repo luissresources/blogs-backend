@@ -20,7 +20,7 @@ describe('when there is initially one user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    const passwordHash = await bcrypt.hash('sekret', 10)
+    const passwordHash = await bcrypt.hash(process.env.SECRET, 10)
     const user = new User({ username: 'root', passwordHash })
 
     await user.save()
@@ -32,7 +32,7 @@ describe('when there is initially one user in db', () => {
     const newUser = {
       username: 'mluukkai',
       name: 'Matti Luukkainen',
-      password: 'salainen',
+      password: 'letsgo',
     }
 
     await api
@@ -46,6 +46,28 @@ describe('when there is initially one user in db', () => {
 
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
+  })
+
+  test('user create: username and password validation error ', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'luiss2',
+      name: 'Luis Sanchez',
+      password: 'le',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).not.toContain(newUser.username)
   })
 })
 
@@ -73,16 +95,13 @@ describe('all blogs - get', () => {
 
   test('new blog add', async () => {
     const userAll = await helper.usersInDb()
-    // console.log({ userAll })
     const user = userAll[0]
-    // console.log('user test:',user.id)
-
 
     const newBlog = {
       title: 'CSS is awesome',
       author: 'Luis Sanchez',
       url: 'luissresources.com',
-      likes: 10,
+      likes: 11,
       user: user.id
     }
 
@@ -102,10 +121,7 @@ describe('all blogs - get', () => {
 
   test('send without likes property', async () => {
     const userAll = await helper.usersInDb()
-    // console.log({ userAll })
     const user = userAll[0]
-    // console.log('user test:',user.id)
-
 
     const newBlog = {
       title: 'REACT is awesome',
@@ -179,8 +195,6 @@ describe('delete blog', () => {
       .expect(404)
   })
 })
-
-
 
 afterAll(() => {
   mongoose.connection.close()
