@@ -12,13 +12,11 @@ blogsRouter.post('/', async (request, response) => {
   const body = request.body
   let user = ''
 
-  if(process.env.NODE_ENV !== 'test') {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!request.token || !decodedToken.id) {
-      return response.status(401).json({ error: 'token missing or invalid' })
-    }
-    user = await User.findById(decodedToken.id)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
   }
+  user = await User.findById(decodedToken.id)
 
   if(process.env.NODE_ENV === 'test') {
     user = await User.findById(body.user)
@@ -71,32 +69,22 @@ blogsRouter.put('/:id', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
 
-  if(process.env.NODE_ENV !== 'test') {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!request.token || !decodedToken.id) {
-      return response.status(401).json({ error: 'token missing or invalid' })
-    }
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
 
-    const blogToDelete = await Blog.findById(request.params.id)
-    if(!blogToDelete) {
-      response.status(404).end()
-    }
+  const blogToDelete = await Blog.findById(request.params.id)
+  if(!blogToDelete) {
+    response.status(404).end()
+  }
 
-    const userOwnToBlog = blogToDelete.user
+  const userOwnToBlog = blogToDelete.user
 
-    // user logged
-    const user = await User.findById(decodedToken.id)
+  // user logged
+  const user = await User.findById(decodedToken.id)
 
-    if( user.id.toString() === userOwnToBlog.toString()) {
-      await Blog.findByIdAndRemove(blogToDelete.id)
-      response.status(204).end()
-    }
-  } else {
-    const blogToDelete = await Blog.findById(request.params.id)
-    if(!blogToDelete) {
-      response.status(404).end()
-    }
-
+  if( user.id.toString() === userOwnToBlog.toString()) {
     await Blog.findByIdAndRemove(blogToDelete.id)
     response.status(204).end()
   }

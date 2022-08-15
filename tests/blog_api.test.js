@@ -93,7 +93,9 @@ describe('all blogs - get', () => {
     expect(getBlog.id).toBeDefined()
   })
 
-  test('new blog add', async () => {
+  test.only('new blog add', async () => {
+    const token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo'
+
     const userAll = await helper.usersInDb()
     const user = userAll[0]
 
@@ -108,6 +110,7 @@ describe('all blogs - get', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization : token })
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -172,11 +175,16 @@ describe('update blog', () => {
 
 describe('delete blog', () => {
   test('delete only blog', async () => {
+
+    const token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo'
+
+
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set({ Authorization: token })
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()

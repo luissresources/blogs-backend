@@ -9,7 +9,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo
 
 {
-  "title": "C++ is awesome",
+  "title": "Linux is awesome",
   "author": "Luis Sanchez",
   "url": "http://luissresources.com",
   "likes": 10,
@@ -17,7 +17,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1a
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/62f963b2bd024c66a3071da3
+DELETE http://localhost:3003/api/blogs/62f956d0f434825b3a696770
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo
 
 ###
