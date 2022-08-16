@@ -6,19 +6,32 @@ GET http://localhost:3003/api/blogs/62f96eac7d211a54843e7475
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo
+Authorization: {{token}}
 
 {
-  "title": "Linux is awesome",
+  "title": "React is awesome",
   "author": "Luis Sanchez",
   "url": "http://luissresources.com",
-  "likes": 10,
+  "likes": 15,
   "user": "62f9526eb3598481a3954932"
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/62f956d0f434825b3a696770
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo
+PUT http://localhost:3003/api/blogs/62faac451b9042fffa9b3fd0 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "title": "JS is awesome",
+  "author": "Luis Sanchez",
+  "url": "http://luissresources.com",
+  "likes": 15,
+  "user": "62f9526eb3598481a3954932"
+}
+
+###
+DELETE http://localhost:3003/api/blogs/62faac451b9042fffa9b3fd0
+Authorization: {{token}}
 
 ###
 GET http://localhost:3003/api/users

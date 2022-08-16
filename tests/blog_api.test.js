@@ -7,31 +7,61 @@ const Blog = require('../models/blog')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
+let token = ''
+
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
 
-  for(let blog of helper.allBlogs) {
+  const users = [
+    {
+      username: 'root',
+      password: process.env.SECRET
+    },
+    {
+      username: 'luissdev',
+      password: 'letsgo'
+    }
+  ]
+
+  for(let user of users) {
+    let passwordHash = await bcrypt.hash(user.password, 10)
+    let userObject = new User ({
+      username: user.username,
+      passwordHash
+    })
+    await userObject.save()
+  }
+
+  const createToken = async () => {
+    const userToUse = await  User.findOne({ username : 'luissdev' })
+    token =  await helper.generateToken(userToUse)
+  }
+
+  createToken()
+})
+
+beforeEach(async () => {
+
+  const user = await  User.findOne({ username : 'luissdev' })
+  const userId = user._id.toString()
+  const allBlogs = helper.allBlogs
+  const allBlogsWithNewUser = allBlogs.map(blog => ({ ...blog, user: userId }))
+
+  for(let blog of allBlogsWithNewUser) {
     let blogObject = new Blog(blog)
     await blogObject.save()
   }
 })
 
-describe('when there is initially one user in db', () => {
-  beforeEach(async () => {
-    await User.deleteMany({})
-
-    const passwordHash = await bcrypt.hash(process.env.SECRET, 10)
-    const user = new User({ username: 'root', passwordHash })
-
-    await user.save()
-  })
+describe('users', () => {
 
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
+      username: 'family',
+      name: 'Family SE',
       password: 'letsgo',
     }
 
@@ -52,8 +82,8 @@ describe('when there is initially one user in db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'luiss2',
-      name: 'Luis Sanchez',
+      username: 'johndoe',
+      name: 'John Doe',
       password: 'le',
     }
 
@@ -71,14 +101,13 @@ describe('when there is initially one user in db', () => {
   })
 })
 
-describe('all blogs - get', () => {
+describe('blogs - get', () => {
+
   test('blogs are returned as json', async () => {
-    const response = await api
+    await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', 'application/json; charset=utf-8')
-
-    expect(response.body).toHaveLength(helper.allBlogs.length)
   })
 
   test('all blogs returned', async () => {
@@ -93,9 +122,7 @@ describe('all blogs - get', () => {
     expect(getBlog.id).toBeDefined()
   })
 
-  test.only('new blog add', async () => {
-    const token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo'
-
+  test('new blog add', async () => {
     const userAll = await helper.usersInDb()
     const user = userAll[0]
 
@@ -136,6 +163,7 @@ describe('all blogs - get', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization : token })
       .expect(201)
 
     const content = await helper.blogsInDb()
@@ -158,27 +186,25 @@ describe('all blogs - get', () => {
   })
 })
 
-describe('update blog', () => {
+describe('blogs - put', () => {
   test('update only blog', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
+
     const updatedBlog = { ...blogToUpdate, likes : 23 }
 
     await api
       .put(`/api/blogs/${ blogToUpdate.id }`)
       .send(updatedBlog)
+      .set({ Authorization : token })
 
     const content = await Blog.findById(blogToUpdate.id)
     expect(content.likes).toBe(23)
   })
 })
 
-describe('delete blog', () => {
+describe('blogs - delete', () => {
   test('delete only blog', async () => {
-
-    const token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1aXNzZGV2IiwiaWQiOiI2MmY5NTI2ZWIzNTk4NDgxYTM5NTQ5MzIiLCJpYXQiOjE2NjA1MjQ0NDJ9.yq_0J6tcYfbGcikoHlekEyAtRPhanJbeHZvJDeKGjxo'
-
-
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
@@ -200,6 +226,7 @@ describe('delete blog', () => {
 
     await api
       .delete(`/api/blogs/${id}`)
+      .set({ Authorization: token })
       .expect(404)
   })
 })
