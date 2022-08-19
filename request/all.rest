@@ -1,7 +1,7 @@
 GET http://localhost:3003/api/blogs
 
 ### 
-GET http://localhost:3003/api/blogs/62f96eac7d211a54843e7475
+GET http://localhost:3003/api/blogs/630006e7d5789eb8cdc5a122
 
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
@@ -9,15 +9,15 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "title": "React is awesome",
+  "title": "ReactJS is awesome",
   "author": "Luis Sanchez",
   "url": "http://luissresources.com",
-  "likes": 15,
-  "user": "62f9526eb3598481a3954932"
+  "likes": 20,
+  "user": "62ffd66d214fe5a333329053"
 }
 
 ###
-PUT http://localhost:3003/api/blogs/62faac451b9042fffa9b3fd0 HTTP/1.1
+PUT http://localhost:3003/api/blogs/62ffd67f214fe5a333329058 HTTP/1.1
 Content-Type: application/json
 Authorization: {{token}}
 
@@ -25,32 +25,32 @@ Authorization: {{token}}
   "title": "JS is awesome",
   "author": "Luis Sanchez",
   "url": "http://luissresources.com",
-  "likes": 15,
-  "user": "62f9526eb3598481a3954932"
+  "likes": 20,
+  "user": "62ffd66d214fe5a333329053"
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/62faac451b9042fffa9b3fd0
+DELETE http://localhost:3003/api/blogs/62ffd67f214fe5a333329058
 Authorization: {{token}}
 
 ###
 GET http://localhost:3003/api/users
 
 ### 
-GET http://localhost:3003/api/users/62f88b7cc3a0bdfd53241af8
+GET http://localhost:3003/api/users/63000720d5789eb8cdc5a130
 
 ###
 POST http://localhost:3003/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "family",
-  "name": "family@gmail.com",
-  "password": "letsgofamily"
+  "username": "game",
+  "name": "game",
+  "password": "letsgo"
 }
 
 ###
-DELETE http://localhost:3003/api/users/62f96f1779441f31dd078838
+DELETE http://localhost:3003/api/users/630007eaecb77da6feaf1673
 ###
 POST http://localhost:3003/api/login
 Content-Type: application/json
